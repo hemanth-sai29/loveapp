@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, BookHeart, Sparkles, RotateCcw, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Heart, BookHeart, Sparkles, RotateCcw, CheckCircle2, ShieldCheck, Database } from 'lucide-react';
 import { StepId } from '../../types/questionnaire';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   onReset: () => void;
   onLoadDemo: () => void;
   onOpenSecurity: () => void;
+  onOpenAdmin: () => void;
   isDemo: boolean;
   hasAnswers: boolean;
   lastSavedText?: string;
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onLoadDemo,
   onOpenSecurity,
+  onOpenAdmin,
   isDemo,
   hasAnswers,
   lastSavedText = 'Saved to device',
@@ -112,6 +114,17 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <ShieldCheck className="w-3.5 h-3.5 text-rose-500" />
             <span className="hidden sm:inline">Privacy & Link</span>
+          </button>
+
+          {/* Admin Database Portal Button */}
+          <button
+            type="button"
+            onClick={onOpenAdmin}
+            title="Admin Database Vault"
+            className="text-xs font-semibold text-slate-700 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+          >
+            <Database className="w-3.5 h-3.5 text-rose-500" />
+            <span className="hidden sm:inline">Admin</span>
           </button>
 
           {/* Reset questionnaire button */}

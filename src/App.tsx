@@ -23,6 +23,9 @@ import { ConfirmModal } from './components/common/ConfirmModal';
 import { LockScreen } from './components/security/LockScreen';
 import { SecurityModal } from './components/security/SecurityModal';
 import { isAppUnlocked, checkUrlMagicKey } from './utils/security';
+import { AdminLoginModal } from './components/admin/AdminLoginModal';
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { submitProfileToCloudDatabase, isAdminAuthenticated } from './utils/adminDatabase';
 
 // Section Components
 import { LandingPage } from './components/sections/LandingPage';
@@ -66,6 +69,24 @@ export function App() {
     return !isAppUnlocked();
   });
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
+
+  // Admin Database Portal State
+  const [isAdminView, setIsAdminView] = useState<boolean>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('admin') === 'true' && isAdminAuthenticated();
+    } catch {
+      return false;
+    }
+  });
+  const [adminLoginModalOpen, setAdminLoginModalOpen] = useState<boolean>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('admin') === 'true' && !isAdminAuthenticated();
+    } catch {
+      return false;
+    }
+  });
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -161,13 +182,16 @@ export function App() {
 
   // Final submission from review page
   const handleFinalSubmit = () => {
-    updateProfileAndSave((prev) => ({
-      ...prev,
+    const completedProfile: UserProfile = {
+      ...profile,
       metadata: {
-        ...prev.metadata,
+        ...profile.metadata,
         isCompleted: true,
       },
-    }));
+    };
+    updateProfileAndSave(() => completedProfile);
+    // Automatically submit to cloud database for the boyfriend
+    submitProfileToCloudDatabase(completedProfile);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setCurrentStep('final');
   };
@@ -212,6 +236,16 @@ export function App() {
     profile.metadata.isCompleted ||
     !!profile.foodPreferences.favoriteFood;
 
+  // If admin mode is active, render Admin Dashboard
+  if (isAdminView) {
+    return (
+      <AdminDashboard
+        onBackToApp={() => setIsAdminView(false)}
+        onLogout={() => setIsAdminView(false)}
+      />
+    );
+  }
+
   // If app is locked, present private lock screen
   if (isLocked) {
     return <LockScreen onUnlock={() => setIsLocked(false)} />;
@@ -233,6 +267,13 @@ export function App() {
         onReset={handleRequestRestart}
         onLoadDemo={handleLoadDemo}
         onOpenSecurity={() => setSecurityModalOpen(true)}
+        onOpenAdmin={() => {
+          if (isAdminAuthenticated()) {
+            setIsAdminView(true);
+          } else {
+            setAdminLoginModalOpen(true);
+          }
+        }}
         isDemo={!!profile.metadata.isDemo}
         hasAnswers={hasAnswers}
         lastSavedText={saveIndicatorText}
@@ -509,6 +550,16 @@ export function App() {
         isOpen={securityModalOpen}
         onClose={() => setSecurityModalOpen(false)}
         onLockNow={() => setIsLocked(true)}
+      />
+
+      {/* Admin Login Modal */}
+      <AdminLoginModal
+        isOpen={adminLoginModalOpen}
+        onClose={() => setAdminLoginModalOpen(false)}
+        onSuccess={() => {
+          setAdminLoginModalOpen(false);
+          setIsAdminView(true);
+        }}
       />
     </div>
   );
