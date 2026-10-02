@@ -63,8 +63,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp, onL
   };
 
   useEffect(() => {
-    // Attempt cloud refresh on mount
-    handleRefresh();
+    let isMounted = true;
+    fetchCloudSubmissions()
+      .then((cloudData) => {
+        if (isMounted) {
+          setSubmissions(cloudData);
+          setSyncStatusMsg(`Synced ${cloudData.length} submissions from cloud`);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setSyncStatusMsg('Loaded local cache');
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Filter submissions by query

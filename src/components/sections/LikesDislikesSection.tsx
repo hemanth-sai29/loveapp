@@ -4,7 +4,7 @@ import { SectionHeader } from '../common/SectionHeader';
 import { TextQuestion } from '../common/TextQuestion';
 import { TextareaQuestion } from '../common/TextareaQuestion';
 import { NavigationButtons } from '../common/NavigationButtons';
-import { Heart, Ban, Film, Music, BookOpen, Smile, ShieldAlert } from 'lucide-react';
+import { Heart, Ban } from 'lucide-react';
 
 interface LikesDislikesSectionProps {
   data: LikesDislikes;

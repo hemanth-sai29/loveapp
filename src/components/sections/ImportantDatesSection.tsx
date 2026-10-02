@@ -5,7 +5,7 @@ import { DateTimeline } from './dates/DateTimeline';
 import { NavigationButtons } from '../common/NavigationButtons';
 import { DATE_CATEGORIES } from '../../utils/constants';
 import { validateDateItem } from '../../utils/validation';
-import { Plus, Check, X, Calendar } from 'lucide-react';
+import { Plus, Check, X } from 'lucide-react';
 
 interface ImportantDatesSectionProps {
   dates: ImportantDate[];

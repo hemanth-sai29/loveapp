@@ -1,6 +1,5 @@
 import React from 'react';
 import { RapidFireAnswers, ValidationErrors } from '../../types/questionnaire';
-import { SectionHeader } from '../common/SectionHeader';
 import { NavigationButtons } from '../common/NavigationButtons';
 import { RAPID_FIRE_QUESTIONS } from '../../utils/constants';
 import { Zap, CheckCircle2 } from 'lucide-react';

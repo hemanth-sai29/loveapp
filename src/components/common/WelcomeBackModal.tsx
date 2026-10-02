@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Sparkles, RotateCcw, ArrowRight } from 'lucide-react';
+import { Heart, RotateCcw, ArrowRight } from 'lucide-react';
 
 interface WelcomeBackModalProps {
   isOpen: boolean;

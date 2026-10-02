@@ -4,7 +4,6 @@ import { SectionHeader } from '../common/SectionHeader';
 import { TextQuestion } from '../common/TextQuestion';
 import { TextareaQuestion } from '../common/TextareaQuestion';
 import { NavigationButtons } from '../common/NavigationButtons';
-import { Heart, Sparkles, MessageCircleHeart } from 'lucide-react';
 
 interface AboutUsSectionProps {
   data: AboutUs;

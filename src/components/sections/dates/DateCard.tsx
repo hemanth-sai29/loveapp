@@ -1,6 +1,6 @@
 import React from 'react';
-import { Calendar, Trash2, Edit3, Tag, Heart } from 'lucide-react';
-import { ImportantDate, DateCategory } from '../../../types/questionnaire';
+import { Calendar, Trash2, Edit3 } from 'lucide-react';
+import { ImportantDate } from '../../../types/questionnaire';
 import { DATE_CATEGORIES } from '../../../utils/constants';
 
 interface DateCardProps {
@@ -14,7 +14,7 @@ export const DateCard: React.FC<DateCardProps> = ({
   item,
   onEdit,
   onDelete,
-  isTimeline = false,
+  isTimeline: _isTimeline = false,
 }) => {
   const categoryMeta = DATE_CATEGORIES.find((c) => c.label === item.category) || DATE_CATEGORIES[0];
 

@@ -50,6 +50,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         “Because if I’m going to be by your side, I want to remember the little things that make you… you.”
       </p>
 
+      {girlfriendName && (
+        <p className="mt-2 text-sm text-rose-600 font-semibold font-romantic italic animate-fadeIn">
+          Welcome back, {girlfriendName} ❤️
+        </p>
+      )}
+
       {/* Call to Actions */}
       <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
         <button

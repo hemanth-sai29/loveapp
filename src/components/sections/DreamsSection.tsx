@@ -1,10 +1,9 @@
 import React from 'react';
 import { Dreams, ValidationErrors } from '../../types/questionnaire';
-import { SectionHeader } from '../common/SectionHeader';
 import { TextQuestion } from '../common/TextQuestion';
 import { TextareaQuestion } from '../common/TextareaQuestion';
 import { NavigationButtons } from '../common/NavigationButtons';
-import { Moon, Sparkles, Compass, Rocket, HeartHandshake } from 'lucide-react';
+import { Moon } from 'lucide-react';
 
 interface DreamsSectionProps {
   data: Dreams;

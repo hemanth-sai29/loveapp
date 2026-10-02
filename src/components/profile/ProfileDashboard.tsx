@@ -6,29 +6,23 @@ import { exportProfileAsJSON } from '../../utils/storage';
 import {
   Heart,
   BookHeart,
-  Sparkles,
   Download,
   Printer,
   Edit3,
   BookmarkCheck,
-  Calendar,
-  Lock,
   ChevronRight,
-  ShieldAlert,
-  Flame,
-  UserCheck,
 } from 'lucide-react';
 
 interface ProfileDashboardProps {
   profile: UserProfile;
   onEditSection: (stepId: StepId) => void;
-  onRestart: () => void;
+  onRestart?: () => void;
 }
 
 export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   profile,
   onEditSection,
-  onRestart,
+  onRestart: _onRestart,
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'reminders'>('all');
 
@@ -46,8 +40,6 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   } = profile;
 
   const fallback = 'Not answered yet ❤️';
-
-  const herDisplayName = basicDetails.callName?.trim() || 'Her';
 
   // Compute Birthday from importantDates or text
   const birthdayDate = importantDates.find(

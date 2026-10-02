@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { Heart, Sparkles, BookHeart, Download, ShieldCheck } from 'lucide-react';
+import { Heart, Sparkles, Download, ShieldCheck } from 'lucide-react';
 import { UserProfile } from '../../types/questionnaire';
 import { exportProfileAsJSON } from '../../utils/storage';
 

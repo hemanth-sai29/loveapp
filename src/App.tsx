@@ -43,11 +43,19 @@ import { FinalMessageSection } from './components/sections/FinalMessageSection';
 import { ProfileDashboard } from './components/profile/ProfileDashboard';
 
 export function App() {
-  const [profile, setProfile] = useState<UserProfile>(INITIAL_EMPTY_PROFILE);
+  const [profile, setProfile] = useState<UserProfile>(() => {
+    return loadProfileFromStorage() || INITIAL_EMPTY_PROFILE;
+  });
   const [currentStep, setCurrentStep] = useState<StepId>('landing');
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
-  const [savedLastTime, setSavedLastTime] = useState<string | undefined>(undefined);
+  const [savedLastTime] = useState<string | undefined>(() => {
+    return loadProfileFromStorage()?.metadata.lastUpdated;
+  });
+  const [welcomeModalOpen, setWelcomeModalOpen] = useState(() => {
+    const saved = loadProfileFromStorage();
+    if (!saved) return false;
+    return !!saved.basicDetails.callName || saved.importantDates.length > 0 || saved.metadata.isCompleted;
+  });
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -87,25 +95,6 @@ export function App() {
       return false;
     }
   });
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const saved = loadProfileFromStorage();
-    if (saved) {
-      setProfile(saved);
-      setSavedLastTime(saved.metadata.lastUpdated);
-
-      // If user had previous progress, show the welcome modal
-      const hasMeaningfulData =
-        !!saved.basicDetails.callName ||
-        saved.importantDates.length > 0 ||
-        saved.metadata.isCompleted;
-
-      if (hasMeaningfulData) {
-        setWelcomeModalOpen(true);
-      }
-    }
-  }, []);
 
   // Autosave to localStorage on profile change
   const updateProfileAndSave = useCallback((updater: (prev: UserProfile) => UserProfile) => {
