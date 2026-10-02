@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, BookHeart, Sparkles, RotateCcw, CheckCircle2 } from 'lucide-react';
+import { Heart, BookHeart, Sparkles, RotateCcw, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { StepId } from '../../types/questionnaire';
 
 interface HeaderProps {
@@ -7,6 +7,7 @@ interface HeaderProps {
   onNavigate: (step: StepId) => void;
   onReset: () => void;
   onLoadDemo: () => void;
+  onOpenSecurity: () => void;
   isDemo: boolean;
   hasAnswers: boolean;
   lastSavedText?: string;
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   onReset,
   onLoadDemo,
+  onOpenSecurity,
   isDemo,
   hasAnswers,
   lastSavedText = 'Saved to device',
@@ -100,6 +102,17 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Her Manual</span>
             </button>
           )}
+
+          {/* Privacy & Link-Only Access Button */}
+          <button
+            type="button"
+            onClick={onOpenSecurity}
+            title="Privacy & Shareable Link Settings"
+            className="text-xs font-medium text-slate-700 hover:text-rose-700 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-rose-500" />
+            <span className="hidden sm:inline">Privacy & Link</span>
+          </button>
 
           {/* Reset questionnaire button */}
           {hasAnswers && !isDemo && (

@@ -1,11 +1,19 @@
 import { UserProfile } from '../types/questionnaire';
 import { STORAGE_KEY, INITIAL_EMPTY_PROFILE, SAMPLE_DEMO_PROFILE } from './constants';
+import { obfuscateData, deobfuscateData, getSecurityConfig } from './security';
 
 export const loadProfileFromStorage = (): UserProfile | null => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
+
+    let jsonStr = raw;
+    // Check if stored data is obfuscated
+    if (!raw.trim().startsWith('{')) {
+      jsonStr = deobfuscateData(raw);
+    }
+
+    const parsed = JSON.parse(jsonStr);
     if (parsed && typeof parsed === 'object' && parsed.basicDetails) {
       // Merge with initial template in case schema added new fields
       return {
@@ -46,7 +54,10 @@ export const saveProfileToStorage = (profile: UserProfile): boolean => {
         lastUpdated: new Date().toISOString(),
       },
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    const jsonStr = JSON.stringify(updated);
+    const config = getSecurityConfig();
+    const finalStored = config.obfuscateStorage ? obfuscateData(jsonStr) : jsonStr;
+    localStorage.setItem(STORAGE_KEY, finalStored);
     return true;
   } catch (err) {
     console.error('Error saving profile to localStorage:', err);

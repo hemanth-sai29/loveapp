@@ -20,6 +20,9 @@ import { FloatingHearts } from './components/common/FloatingHearts';
 import { PrivacyNotice } from './components/common/PrivacyNotice';
 import { WelcomeBackModal } from './components/common/WelcomeBackModal';
 import { ConfirmModal } from './components/common/ConfirmModal';
+import { LockScreen } from './components/security/LockScreen';
+import { SecurityModal } from './components/security/SecurityModal';
+import { isAppUnlocked, checkUrlMagicKey } from './utils/security';
 
 // Section Components
 import { LandingPage } from './components/sections/LandingPage';
@@ -54,6 +57,15 @@ export function App() {
     onConfirm: () => {},
   });
   const [saveIndicatorText, setSaveIndicatorText] = useState('Autosaved');
+
+  // Security & Link-only Access State
+  const [isLocked, setIsLocked] = useState<boolean>(() => {
+    // Check if URL has valid magic key (?key=... or ?passcode=...)
+    const unlockedViaMagicUrl = checkUrlMagicKey();
+    if (unlockedViaMagicUrl) return false;
+    return !isAppUnlocked();
+  });
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -200,6 +212,11 @@ export function App() {
     profile.metadata.isCompleted ||
     !!profile.foodPreferences.favoriteFood;
 
+  // If app is locked, present private lock screen
+  if (isLocked) {
+    return <LockScreen onUnlock={() => setIsLocked(false)} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFBFB] text-slate-800 relative selection:bg-rose-200 selection:text-rose-900">
       {/* Subtle Floating Hearts and Sparkles Background */}
@@ -215,6 +232,7 @@ export function App() {
         }}
         onReset={handleRequestRestart}
         onLoadDemo={handleLoadDemo}
+        onOpenSecurity={() => setSecurityModalOpen(true)}
         isDemo={!!profile.metadata.isDemo}
         hasAnswers={hasAnswers}
         lastSavedText={saveIndicatorText}
@@ -484,6 +502,13 @@ export function App() {
         message={confirmModal.message}
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
+
+      {/* Security & Link-only Access Modal */}
+      <SecurityModal
+        isOpen={securityModalOpen}
+        onClose={() => setSecurityModalOpen(false)}
+        onLockNow={() => setIsLocked(true)}
       />
     </div>
   );
